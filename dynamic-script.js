@@ -1,34 +1,24 @@
-async function extractConnections() {
-    console.log("🔍 Iniciando extração de conexões no LinkedIn...");
-
-    let linkedinConnections = [];
-
-    document.querySelectorAll(".mn-connection-card").forEach(card => {
-        const nameElement = card.querySelector(".mn-connection-card__name");
-        const linkElement = card.querySelector("a[href*='/in/']");
-        const jobElement = card.querySelector(".mn-connection-card__occupation");
-
-        const name = nameElement ? nameElement.innerText.trim() : "Sem nome";
-        const profileurl = linkElement ? `https://www.linkedin.com${linkElement.getAttribute("href").split("?")[0]}` : "Sem URL";
-        const jobtitle = jobElement ? jobElement.innerText.trim() : "N/A";
-
-        // Evita adicionar duplicatas
-        if (!linkedinConnections.some(conn => conn.profileurl === profileurl)) {
-            linkedinConnections.push({ name, jobtitle, profileurl });
-        }
-    });
-
-    if (linkedinConnections.length > 0) {
-        console.log("📌 Conexões extraídas:", linkedinConnections);
-        
-        // 🔥 Envia os dados para o popup
-        chrome.runtime.sendMessage({ action: "scrapedData", data: linkedinConnections }, (response) => {
-            console.log("📤 Dados enviados ao popup:", response);
-        });
-    } else {
-        console.log("⚠️ Nenhuma conexão encontrada.");
-    }
+{
+  "functionName": "extractConnections",
+  "logStart": "🔍 Iniciando extração de conexões no LinkedIn...",
+  "connectionsArray": "let linkedinConnections = [];",
+  "cardSelector": "document.querySelectorAll(\".mn-connection-card\").forEach(card => {",
+  "nameElementSelector": "const nameElement = card.querySelector(\".mn-connection-card__name\");",
+  "linkElementSelector": "const linkElement = card.querySelector(\"a[href*='/in/']\");",
+  "jobElementSelector": "const jobElement = card.querySelector(\".mn-connection-card__occupation\");",
+  "nameExtraction": "const name = nameElement ? nameElement.innerText.trim() : \"Sem nome\";",
+  "profileUrlExtraction": "const profileurl = linkElement ? `https://www.linkedin.com${linkElement.getAttribute(\"href\").split(\"?\")[0]}` : \"Sem URL\";",
+  "jobTitleExtraction": "const jobtitle = jobElement ? jobElement.innerText.trim() : \"N/A\";",
+  "duplicateCheck": "if (!linkedinConnections.some(conn => conn.profileurl === profileurl)) {",
+  "connectionPush": "linkedinConnections.push({ name, jobtitle, profileurl });",
+  "connectionPushEnd": "}",
+  "cardSelectorEnd": "});",
+  "dataCheck": "if (linkedinConnections.length > 0) {",
+  "logExtractedConnections": "console.log(\"📌 Conexões extraídas:\", linkedinConnections);",
+  "sendMessageToPopup": "chrome.runtime.sendMessage({ action: \"scrapedData\", data: linkedinConnections })",
+  "sendMessageSuccessLog": ".then(() => console.log(\"📤 Dados enviados ao popup com sucesso!\"))",
+  "sendMessageErrorLog": ".catch(err => console.error(\"❌ Erro ao enviar os dados:\", err));",
+  "dataCheckEnd": "} else {",
+  "noConnectionsFoundLog": "console.log(\"⚠️ Nenhuma conexão encontrada.\");",
+  "functionEnd": "}"
 }
-
-// 🔄 Executa automaticamente quando injetado
-extractConnections();
